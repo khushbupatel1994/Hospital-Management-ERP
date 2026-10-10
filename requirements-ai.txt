@@ -1,0 +1,2 @@
+# Optional live AI support
+openai>=1.0.0

@@ -1,0 +1,5 @@
+{
+  "api_url": "https://erp.example-hospital.local",
+  "tls_verify": true,
+  "mode": "remote"
+}

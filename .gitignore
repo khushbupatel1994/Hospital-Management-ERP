@@ -1,0 +1,74 @@
+﻿# Python
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+*.env
+
+# Databases / runtime data
+*.db
+*.sqlite
+*.sqlite3
+database/
+server-data/
+logs/
+uploads/
+backups/
+
+# Private keys / licenses
+developer_private_key.pem
+private_key.pem
+license.key
+license_*.key
+*.pem
+
+# Allow customer-side public verification key
+!frontend/license/public_key.pem
+
+# Build output
+build/
+dist/
+installer_output/
+*.spec
+
+# Temporary files
+tempCodeRunnerFile.py
+*.tmp
+*.bak
+*.backup
+*.api-backup
+*.github-safety-backup
+*.patient-add-backup
+*_backup.py
+
+# Patient personal data
+assets/patients/
+
+# Developer-only tools
+BUILD-DEVELOPER-WINDOWS.bat
+README-DEVELOPER.txt
+frontend/license/developer_license_tool.py
+
+# IDE
+.vscode/
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# All local backup variants
+*.backup
+*.api-backup
+*.dashboard-backup
+*.github-safety-backup
+*.patient-add-backup
+*_backup.py

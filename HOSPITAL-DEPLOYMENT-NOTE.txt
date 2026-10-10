@@ -1,0 +1,12 @@
+CLOUD SECURE HOSPITAL ERP - PHASE 3 ENTERPRISE
+
+DEVELOPER PACKAGE:
+Keep the complete source tree private.
+
+HOSPITAL PACKAGE:
+Build on Windows using BUILD-HOSPITAL-WINDOWS.bat.
+Give the hospital only the generated Hospital_Install folder.
+That folder contains a compiled executable and installer, not the Python source tree.
+
+IMPORTANT:
+A Windows executable is not mathematically impossible to reverse engineer. For stronger protection of proprietary AI/business logic, keep those components on a secured server and expose only an authenticated HTTPS API to the desktop client.

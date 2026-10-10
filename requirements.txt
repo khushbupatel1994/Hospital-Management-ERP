@@ -1,0 +1,11 @@
+customtkinter>=5.2
+bcrypt>=4.1
+Pillow>=10.0
+matplotlib>=3.8
+openpyxl>=3.1
+reportlab>=4.0
+tkcalendar>=1.6
+openai>=1.0
+pyinstaller>=6.0
+# Phase 4 server (optional for server deployment)
+-r requirements-server.txt

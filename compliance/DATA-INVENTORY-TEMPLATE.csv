@@ -1,0 +1,5 @@
+data_category,examples,source,purpose,systems,roles_with_access,retention,encrypted_at_rest,encrypted_in_transit,third_party_processor,notes
+Patient identity,name,phone,registration,ERP,Reception,Doctor,Admin,Define by hospital policy,YES,YES,Review,Minimize collection
+Clinical record,diagnosis,lab results,visits,care,ERP,Doctor,Authorized Clinical Staff,Define by hospital policy,YES,YES,Review,AI access must be controlled
+Billing,invoice,payment reference,billing,ERP,Billing,Admin,Define by hospital policy,YES,YES,Review,Do not expose in AI prompts unnecessarily
+Authentication,password hash,session metadata,security,API/Auth,Admin,Security,Define by security policy,YES,YES,No,Use strong hashing and secret management
