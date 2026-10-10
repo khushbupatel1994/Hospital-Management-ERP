@@ -197,9 +197,20 @@ def initialize_demo_database():
         app_paths.DATABASE_DIR = str(DB.parent)
 
         from database.database import Database
-        db = Database()
-        db.connect()
-        db.close()
+        # The shared Database wrapper reads HOSPITAL_DB at construction time.
+        # Set it temporarily so the API schema is created beside the users
+        # table above instead of falling back to a desktop-only path.
+        previous_db = os.environ.get("HOSPITAL_DB")
+        os.environ["HOSPITAL_DB"] = str(DB)
+        try:
+            db = Database()
+            db.connect()
+            db.close()
+        finally:
+            if previous_db is None:
+                os.environ.pop("HOSPITAL_DB", None)
+            else:
+                os.environ["HOSPITAL_DB"] = previous_db
 
     except Exception as exc:
         print(f"⚠ ERP core-table initialization warning: {exc}")
