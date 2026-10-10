@@ -163,14 +163,19 @@ async function loadDashboard() {
 
 function renderSummary(summary) {
   const cards = [
-    ["doctors", "Doctors", "♙", String(summary.doctors || 0)],
-    ["patients", "Patients", "♙", String(summary.patients || 0)],
-    ["appointments", "Appointments", "▦", String(summary.appointments || 0)],
-    ["opd", "OPD", "♧", String(summary.opd || 0)],
-    ["ipd", "IPD", "▱", String(summary.ipd || 0)],
-    ["revenue", "Revenue", "♙", formatMoney(summary.revenue)],
+    ["doctors", "Doctors", "♙", String(summary.doctors || 0), "doctors"],
+    ["patients", "Patients", "♙", String(summary.patients || 0), "patients"],
+    ["appointments", "Appointments", "▦", String(summary.appointments || 0), "appointments"],
+    ["opd", "OPD", "♧", String(summary.opd || 0), "opd"],
+    ["ipd", "IPD", "▱", String(summary.ipd || 0), "ipd"],
+    ["revenue", "Revenue", "♙", formatMoney(summary.revenue), "billing"],
   ];
-  $("summary-grid").innerHTML = cards.map(([key, label, icon, value]) => `<article class="dashboard-card ${key === "revenue" ? "revenue" : ""}"><span class="card-icon">${icon}</span><h3>${label}</h3><strong>${escapeHtml(value)}</strong></article>`).join("");
+  $("summary-grid").innerHTML = cards.map(([key, label, icon, value, target]) => `<article class="dashboard-card clickable ${key === "revenue" ? "revenue" : ""}" data-dashboard-module="${target}" role="button" tabindex="0" aria-label="Open ${label}"><span class="card-icon">${icon}</span><h3>${label}</h3><strong>${escapeHtml(value)}</strong></article>`).join("");
+  $("summary-grid").querySelectorAll("[data-dashboard-module]").forEach((card) => {
+    const open = () => openModule(card.dataset.dashboardModule);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } });
+  });
 }
 
 function renderOverview(summary) {
