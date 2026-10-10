@@ -88,7 +88,7 @@ security = HTTPBearer(auto_error=False)
 _failed = {}
 
 # ============================================================
-# RENDER DEMO DATABASE INITIALIZATION
+# DATABASE INITIALIZATION
 # ============================================================
 
 def initialize_demo_database():
@@ -120,14 +120,28 @@ def initialize_demo_database():
             )
         """)
 
+        bootstrap_username = (
+            os.getenv("ERP_BOOTSTRAP_USERNAME", "admin").strip()
+            or "admin"
+        )
+        bootstrap_password = os.getenv(
+            "ERP_BOOTSTRAP_PASSWORD",
+            ""
+        ).strip()
+        demo_mode = os.getenv(
+            "ERP_DEMO_MODE",
+            "false"
+        ).lower() in {"1", "true", "yes"}
+
         existing = con.execute(
             "SELECT id FROM users WHERE username=? COLLATE NOCASE",
-            ("admin",)
+            (bootstrap_username,)
         ).fetchone()
 
-        if not existing:
+        if not existing and (bootstrap_password or demo_mode):
+            password = bootstrap_password or "admin123"
             password_hash = bcrypt.hashpw(
-                b"admin123",
+                password.encode("utf-8"),
                 bcrypt.gensalt()
             ).decode("utf-8")
 
@@ -147,9 +161,9 @@ def initialize_demo_database():
                 )
                 VALUES(?,?,?,?,?,?,?,?,?,?,?)
             """, (
-                "EMP001",
+                None,
                 "Administrator",
-                "admin",
+                bootstrap_username,
                 password_hash,
                 "Super Admin",
                 "Administration",
@@ -175,8 +189,13 @@ def initialize_demo_database():
     except Exception as exc:
         print(f"⚠ ERP core-table initialization warning: {exc}")
 
-    print(f"✅ Render demo database ready: {DB}")
-    print("✅ Demo login: admin / admin123")
+    print(f"✅ Database ready: {DB}")
+    if bootstrap_password:
+        print(f"✅ Bootstrap user created or already present: {bootstrap_username}")
+    elif demo_mode:
+        print("⚠ Demo login enabled: admin / admin123")
+    else:
+        print("ℹ No bootstrap user created; set ERP_BOOTSTRAP_PASSWORD for first login")
 
 initialize_demo_database()
 

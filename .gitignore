@@ -17,7 +17,9 @@ env/
 *.db
 *.sqlite
 *.sqlite3
-database/
+database/*
+!database/__init__.py
+!database/database.py
 server-data/
 logs/
 uploads/

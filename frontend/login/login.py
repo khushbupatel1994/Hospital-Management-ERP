@@ -37,7 +37,7 @@ class LoginApp(LoginUI):
         self.api_client = ERPApiClient(
             base_url=os.getenv(
                 "ERP_API_URL",
-                "http://192.168.31.88:8000"
+                "http://127.0.0.1:8000"
             ),
             api_key=os.getenv(
                 "ERP_API_KEY",
