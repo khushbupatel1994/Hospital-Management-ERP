@@ -18,6 +18,7 @@ from fastapi import (
     Depends,
     Response,
 )
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from pydantic import BaseModel, Field
@@ -82,6 +83,20 @@ app = FastAPI(
     title="Cloud Secure Hospital ERP API",
     version="7.0"
 )
+
+_allowed_origins = [
+    origin.strip()
+    for origin in os.getenv("ERP_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+if _allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_allowed_origins,
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "X-API-Key", "X-Request-ID"],
+    )
 
 security = HTTPBearer(auto_error=False)
 
@@ -521,6 +536,15 @@ def login(req: LoginRequest):
         expires_in=JWT_MINUTES * 60,
         user=safe_user(row)
     )
+
+
+@app.post(
+    "/api/v1/auth/web-login",
+    response_model=LoginResponse,
+)
+def web_login(req: LoginRequest):
+    """Browser login endpoint; the returned JWT protects all other routes."""
+    return login(req)
 
 
 # ============================================================
