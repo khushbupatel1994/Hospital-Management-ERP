@@ -3,108 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#071a2b" />
-    <title>Hospital ERP | Operations Console</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#3c95cf" />
+    <title>Cloud Secure Hospital ERP</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="noise"></div>
-    <main id="login-view" class="login-shell">
-      <section class="login-art" aria-label="Hospital ERP introduction">
-        <div class="brand-lockup">
-          <span class="brand-mark">+</span>
-          <span>Hospital ERP</span>
-        </div>
-        <div class="art-copy">
-          <p class="eyebrow">Cloud operations console</p>
-          <h1>One clear view of every hospital day.</h1>
-          <p class="muted-copy">Securely coordinate patients, appointments, clinical operations, inventory and billing from one focused workspace.</p>
-        </div>
-        <div class="art-footer">
-          <span class="status-dot"></span>
-          <span>Protected by role-based access</span>
-        </div>
+    <main id="login-view" class="login-view">
+      <section class="login-brand-panel">
+        <div class="brand-mark large">✚</div>
+        <h1>Cloud Secure Hospital ERP</h1>
+        <p>Hospital Management &amp; Accounting ERP</p>
+        <div class="login-status"><span class="status-dot"></span> Secure cloud operations</div>
       </section>
-      <section class="login-panel">
+      <section class="login-card-wrap">
         <div class="login-card">
-          <div class="mobile-brand brand-lockup">
-            <span class="brand-mark">+</span>
-            <span>Hospital ERP</span>
-          </div>
-          <p class="eyebrow">Welcome back</p>
-          <h2>Sign in to your workspace</h2>
-          <p class="panel-copy">Use your hospital credentials to continue.</p>
+          <div class="brand-mark">✚</div>
+          <p class="section-kicker">Administrator access</p>
+          <h2>Welcome back</h2>
+          <p class="muted-copy">Sign in to manage your hospital workspace.</p>
           <form id="login-form" class="stack-form">
-            <label>
-              Username
-              <input id="username" name="username" autocomplete="username" placeholder="Enter username" required />
-            </label>
-            <label>
-              Password
-              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required />
-            </label>
-            <button class="primary-button" type="submit">
-              <span>Sign in</span><span aria-hidden="true">→</span>
-            </button>
+            <label for="username">Username<input id="username" name="username" autocomplete="username" placeholder="Enter username" required /></label>
+            <label for="password">Password<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required /></label>
+            <button class="blue-button" type="submit">Sign in <span>→</span></button>
             <p id="login-error" class="form-error" role="alert"></p>
           </form>
-          <p class="security-note"><span class="lock-icon">⌁</span> Your session is encrypted and expires automatically.</p>
         </div>
       </section>
     </main>
 
-    <main id="app-view" class="app-shell hidden">
+    <main id="app-view" class="app-view hidden">
       <aside class="sidebar">
-        <div class="brand-lockup sidebar-brand">
-          <span class="brand-mark">+</span>
-          <span>Hospital ERP</span>
+        <div class="sidebar-top">
+          <div class="sidebar-symbol">▣</div>
+          <div class="sidebar-symbol small">▤</div>
+          <h1>Cloud Secure Hospital<br />ERP</h1>
         </div>
-        <div class="sidebar-section-label">Workspace</div>
-        <nav id="module-nav" class="module-nav" aria-label="ERP modules"></nav>
-        <div class="sidebar-bottom">
-          <div class="secure-card">
-            <span class="secure-icon">✦</span>
-            <div><strong>Secure mode</strong><small>Role permissions active</small></div>
-          </div>
-          <button id="logout-button" class="ghost-button">Sign out <span>↗</span></button>
-        </div>
+        <nav id="module-nav" class="module-nav" aria-label="Hospital ERP modules"></nav>
       </aside>
 
-      <section class="content-shell">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Operations overview</p>
-            <h1 id="page-title">Dashboard</h1>
-          </div>
-          <div class="topbar-actions">
-            <button id="health-button" class="status-button"><span class="status-dot"></span> System healthy</button>
-            <div class="user-chip"><span id="user-initials" class="avatar">A</span><div><strong id="user-name">Administrator</strong><small id="user-role">Super Admin</small></div></div>
-          </div>
+      <section class="workspace">
+        <header class="erp-header">
+          <div class="hospital-logo">⚕<small>HEALTHCARE</small></div>
+          <div class="hospital-title"><h2>▣ &nbsp; SK Hospital of Group</h2><p>Hospital Management &amp; Accounting ERP</p></div>
+          <div class="header-user"><div id="current-datetime"></div><strong>♟ &nbsp; <span id="user-name">Administrator</span></strong><small id="user-role">Super Admin</small></div>
         </header>
 
         <div id="app-notice" class="app-notice hidden" role="status"></div>
 
-        <section id="dashboard-panel" class="panel-stack">
-          <div class="welcome-row">
-            <div><p class="eyebrow">Today at a glance</p><h2 id="welcome-title">Good to see you.</h2><p class="muted-copy">Here is the latest operational picture across your hospital.</p></div>
-            <button id="refresh-button" class="secondary-button">↻ Refresh data</button>
-          </div>
-          <div id="summary-grid" class="summary-grid"></div>
-          <div class="lower-grid">
-            <section class="content-card alert-card"><div class="card-heading"><div><p class="eyebrow">Assistant</p><h3>Ask about operations</h3></div><span class="card-icon">✦</span></div><p class="muted-copy">Ask a safe, aggregate question about your hospital data.</p><form id="ai-form" class="ai-form"><input id="ai-question" placeholder="e.g. How many patients are registered?" /><button class="secondary-button" type="submit">Ask</button></form><p id="ai-answer" class="ai-answer"></p></section>
-            <section class="content-card"><div class="card-heading"><div><p class="eyebrow">Quick access</p><h3>Operational modules</h3></div><span class="card-icon blue">▦</span></div><div id="quick-modules" class="quick-modules"></div></section>
-          </div>
+        <section id="dashboard-panel" class="dashboard-panel">
+          <div class="page-heading"><h1 id="page-title">Super Admin Dashboard</h1><button id="refresh-button" class="blue-button refresh-button">⟳ &nbsp; Refresh</button></div>
+          <div id="summary-grid" class="dashboard-cards"></div>
+          <section class="overview-card"><h2>Hospital Overview</h2><div id="overview-content"></div><p id="dashboard-status" class="muted-copy">Dashboard loaded from database</p></section>
+          <section class="dashboard-lower-grid">
+            <article class="dashboard-info-card"><div class="info-card-title"><h3>AI Intelligence</h3><span>✦</span></div><p class="muted-copy">Ask a safe aggregate question about your hospital data.</p><form id="ai-form" class="ai-form"><input id="ai-question" placeholder="How many patients are registered?" /><button class="blue-button" type="submit">Ask</button></form><p id="ai-answer" class="ai-answer"></p></article>
+            <article class="dashboard-info-card"><div class="info-card-title"><h3>System Status</h3><span>✓</span></div><div id="system-status" class="system-status-list"></div></article>
+          </section>
         </section>
 
-        <section id="records-panel" class="panel-stack hidden">
-          <div class="section-heading"><div><p class="eyebrow">Data workspace</p><h2 id="records-title">Patients</h2><p id="records-subtitle" class="muted-copy">Review the latest records.</p></div><div class="record-actions"><input id="record-search" class="search-input" placeholder="Search records" /><button id="record-refresh" class="secondary-button">↻ Refresh</button></div></div>
-          <section class="content-card table-card"><div id="records-loading" class="loading-state">Loading records…</div><div class="table-wrap"><table id="records-table"><thead></thead><tbody></tbody></table></div><div id="records-empty" class="empty-state hidden">No records found for this module.</div></section>
+        <section id="records-panel" class="content-panel hidden">
+          <div class="page-heading"><div><h1 id="records-title">Patients</h1><p id="records-subtitle" class="muted-copy">Review the latest records.</p></div><div class="heading-actions"><input id="record-search" class="search-input" placeholder="Search records" /><button id="record-refresh" class="blue-button">⟳ Refresh</button><button id="add-record-button" class="blue-button">＋ Add record</button></div></div>
+          <section class="records-card"><div id="records-loading" class="loading-state">Loading records…</div><div class="table-wrap"><table id="records-table"><thead></thead><tbody></tbody></table></div><div id="records-empty" class="empty-state hidden">No records found for this module.</div></section>
         </section>
+
+        <section id="utility-panel" class="content-panel hidden"><div class="page-heading"><div><h1 id="utility-title">Reports</h1><p id="utility-subtitle" class="muted-copy"></p></div><div id="utility-actions" class="heading-actions"></div></div><div id="utility-content" class="utility-content"></div></section>
+
+        <footer class="statusbar"><span>◉ &nbsp; Database : <b>Connected</b></span><span>♣ &nbsp; Cloud : <b>Online</b></span><span>♟ &nbsp; User : <b id="status-user">Administrator</b></span><span>◷ &nbsp; <b id="status-datetime"></b></span><span>Version : <b>2.0</b></span><span class="non-commercial">This is a non-commercial session.</span></footer>
       </section>
     </main>
+
+    <div id="record-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card"><div class="modal-header"><h2 id="modal-title">Add record</h2><button id="modal-close" class="icon-button" aria-label="Close">×</button></div><form id="record-form" class="record-form"><div id="record-fields" class="form-grid"></div><p id="record-form-error" class="form-error"></p><div class="modal-actions"><button id="modal-cancel" class="light-button" type="button">Cancel</button><button class="blue-button" type="submit">Save record</button></div></form></div>
+    </div>
 
     <script src="config.js"></script>
     <script src="app.js"></script>

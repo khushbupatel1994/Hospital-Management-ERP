@@ -2,10 +2,19 @@
 Only approved tables/fields are exposed through the API.
 """
 import sqlite3
+import bcrypt
 from datetime import datetime, timezone
 from typing import Any
 
 MODULES = {
+    "users": {
+        "table": "users",
+        "read_roles": {"Super Admin", "Admin"},
+        "write_roles": {"Super Admin", "Admin"},
+        # Password hashes are intentionally excluded from list responses.
+        "fields": ["id", "employee_id", "full_name", "username", "role", "department", "mobile", "email", "status", "last_login", "created_at"],
+        "write_fields": ["employee_id", "full_name", "username", "password", "role", "department", "mobile", "email", "status"],
+    },
     "patients": {
         "table": "patients",
         "read_roles": {"Super Admin", "Admin", "Doctor", "Nurse", "Receptionist"},
@@ -48,6 +57,30 @@ MODULES = {
         "write_roles": {"Super Admin", "Admin", "Accounts"},
         "fields": ["id", "bill_id", "bill_no", "patient", "patient_name", "doctor", "doctor_name", "bill_date", "consultation_fee", "medicine_charges", "lab_charges", "total_amount", "paid_amount", "payment_status", "created_at"],
     },
+    "opd": {
+        "table": "opd",
+        "read_roles": {"Super Admin", "Admin", "Doctor", "Nurse", "Receptionist"},
+        "write_roles": {"Super Admin", "Admin", "Doctor", "Receptionist"},
+        "fields": ["id", "opd_id", "patient", "doctor", "department", "visit_date", "visit_time", "chief_complaint", "diagnosis", "prescription", "followup_date", "notes", "status", "created_at"],
+    },
+    "ipd": {
+        "table": "ipd",
+        "read_roles": {"Super Admin", "Admin", "Doctor", "Nurse", "Receptionist"},
+        "write_roles": {"Super Admin", "Admin", "Doctor", "Receptionist"},
+        "fields": ["id", "admission_id", "patient", "doctor", "ward", "bed_no", "admission_date", "discharge_date", "diagnosis", "treatment", "daily_charges", "status", "remarks", "created_at"],
+    },
+    "accounts": {
+        "table": "accounts",
+        "read_roles": {"Super Admin", "Admin", "Accounts"},
+        "write_roles": {"Super Admin", "Admin", "Accounts"},
+        "fields": ["id", "transaction_id", "transaction_date", "transaction_type", "category", "amount", "payment_mode", "description", "remarks", "created_at"],
+    },
+    "employees": {
+        "table": "employees",
+        "read_roles": {"Super Admin", "Admin", "HR"},
+        "write_roles": {"Super Admin", "Admin", "HR"},
+        "fields": ["id", "employee_id", "full_name", "department", "designation", "mobile", "email", "status", "created_at"],
+    },
 }
 
 
@@ -75,6 +108,17 @@ def _available_fields(con, module, table):
         ).fetchall()
     }
     return [field for field in MODULES[module]["fields"] if field in columns]
+
+
+def _write_fields(con, module, table):
+    columns = {
+        row[1]
+        for row in con.execute(
+            f"PRAGMA table_info({table})"
+        ).fetchall()
+    }
+    configured = MODULES[module].get("write_fields", MODULES[module]["fields"])
+    return [field for field in configured if field in columns]
 
 
 def list_records(db_path, module, role, limit=50, offset=0, search=""):
@@ -116,10 +160,16 @@ def create_record(db_path, module, role, payload: dict[str, Any]):
     with sqlite3.connect(db_path) as con:
         table = _table_name(con, module)
         available = set(_available_fields(con, module, table))
-        allowed = available - {"id", "created_at"}
+        allowed = set(_write_fields(con, module, table)) - {"id", "created_at"}
         clean = {k: v for k, v in payload.items() if k in allowed}
         if not clean:
             raise ValueError("No approved fields supplied")
+
+        if module == "users" and clean.get("password"):
+            clean["password"] = bcrypt.hashpw(
+                str(clean["password"]).encode("utf-8"),
+                bcrypt.gensalt(),
+            ).decode("utf-8")
 
         # -------------------------------------------------
         # Patient IDs are generated centrally by the server.
@@ -251,10 +301,16 @@ def update_record(db_path, module, role, record_id: int, payload: dict[str, Any]
         raise PermissionError("Write permission denied")
     with sqlite3.connect(db_path) as con:
         table = _table_name(con, module)
-        allowed = set(_available_fields(con, module, table)) - {"id", "created_at"}
+        allowed = set(_write_fields(con, module, table)) - {"id", "created_at"}
         clean = {k: v for k, v in payload.items() if k in allowed}
         if not clean:
             raise ValueError("No approved fields supplied")
+
+        if module == "users" and clean.get("password"):
+            clean["password"] = bcrypt.hashpw(
+                str(clean["password"]).encode("utf-8"),
+                bcrypt.gensalt(),
+            ).decode("utf-8")
         sets = ", ".join(f"{c}=?" for c in clean)
         cur = con.execute(f"UPDATE {table} SET {sets} WHERE id=?", [clean[c] for c in clean] + [record_id])
         con.commit()

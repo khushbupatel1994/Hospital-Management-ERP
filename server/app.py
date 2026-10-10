@@ -356,6 +356,7 @@ def query_count(
 ) -> int:
 
     allowed = {
+        "users",
         "patients",
         "doctors",
         "appointments",
@@ -364,6 +365,8 @@ def query_count(
         "inventory",
         "ipd",
         "opd",
+        "accounts",
+        "employees",
     }
 
     if table not in allowed:
@@ -588,6 +591,8 @@ def summary(
     )
 
     return {
+        "users": query_count("users"),
+
         "patients": query_count("patients"),
 
         "doctors": query_count("doctors"),
@@ -595,6 +600,12 @@ def summary(
         "appointments": query_count(
             "appointments"
         ),
+
+        "opd": query_count("opd"),
+
+        "ipd": query_count("ipd"),
+
+        "revenue": query_sum("billing", "total_amount"),
 
         "today_appointments": query_count(
             "appointments",
